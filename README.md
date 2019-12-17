@@ -19,7 +19,7 @@ $ npm install -g super-easy-forms-cli
 $ sef COMMAND
 running command...
 $ sef (-v|--version|version)
-super-easy-forms-cli/0.0.0 linux-x64 node-v12.13.1
+super-easy-forms-cli/1.0.1 linux-x64 node-v12.13.1
 $ sef --help [COMMAND]
 USAGE
   $ sef COMMAND
@@ -50,7 +50,7 @@ USAGE
   $ sef build
 ```
 
-_See code: [src/commands/build.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/build.js)_
+_See code: [src/commands/build.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/build.js)_
 
 ## `sef delete NAME`
 
@@ -67,7 +67,7 @@ OPTIONS
   -r, --resources  Delete all of the back-end resources for your form in the cloud
 ```
 
-_See code: [src/commands/delete.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/delete.js)_
+_See code: [src/commands/delete.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/delete.js)_
 
 ## `sef deploy NAME`
 
@@ -85,7 +85,7 @@ OPTIONS
   -u, --update  Update your stack in the AWS cloud
 ```
 
-_See code: [src/commands/deploy.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/deploy.js)_
+_See code: [src/commands/deploy.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/deploy.js)_
 
 ## `sef email EMAIL [NAME]`
 
@@ -104,7 +104,7 @@ OPTIONS
   -v, --validate  validates that the provided email address was verified with AWS SES
 ```
 
-_See code: [src/commands/email.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/email.js)_
+_See code: [src/commands/email.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/email.js)_
 
 ## `sef form NAME`
 
@@ -123,7 +123,7 @@ OPTIONS
   -u, --url=url        The API endpoint endpointUrl for your form
 ```
 
-_See code: [src/commands/form.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/form.js)_
+_See code: [src/commands/form.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/form.js)_
 
 ## `sef fullform NAME`
 
@@ -143,7 +143,7 @@ OPTIONS
   -r, --recipients=recipients  Recipients that will recieve emails on your behalf.
 ```
 
-_See code: [src/commands/fullform.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/fullform.js)_
+_See code: [src/commands/fullform.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/fullform.js)_
 
 ## `sef help [COMMAND]`
 
@@ -178,7 +178,7 @@ OPTIONS
   -c, --create  Helps you create an IAM user and adds its profile to the .env file
 ```
 
-_See code: [src/commands/iam.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/iam.js)_
+_See code: [src/commands/iam.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/iam.js)_
 
 ## `sef lambda NAME`
 
@@ -197,7 +197,7 @@ OPTIONS
   -r, --recipients=recipients  Recipients that will recieve emails on your behalf.
 ```
 
-_See code: [src/commands/lambda.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/lambda.js)_
+_See code: [src/commands/lambda.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/lambda.js)_
 
 ## `sef submissions NAME`
 
@@ -216,7 +216,7 @@ OPTIONS
   -l, --list             print all submissions for the form to stdout
 ```
 
-_See code: [src/commands/submissions.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/submissions.js)_
+_See code: [src/commands/submissions.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/submissions.js)_
 
 ## `sef template NAME`
 
@@ -236,7 +236,7 @@ OPTIONS
   -v, --validate       Validate your cloudformation template with AWS
 ```
 
-_See code: [src/commands/template.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/template.js)_
+_See code: [src/commands/template.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/template.js)_
 
 ## `sef variable NAME VARIABLE VALUE`
 
@@ -252,7 +252,7 @@ ARGUMENTS
   VALUE     value of the variable
 ```
 
-_See code: [src/commands/variable.js](https://github.com/gkpty/super-easy-forms-cli/blob/v0.0.0/src/commands/variable.js)_
+_See code: [src/commands/variable.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.1/src/commands/variable.js)_
 <!-- commandsstop -->
 * [`sef build`](#sef-build)
 * [`sef email`](#sef-email)

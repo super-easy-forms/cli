@@ -6,50 +6,7 @@ const readline = require('readline').createInterface({
 });
 const {cli} = require('cli-ux');
 
-function isEmpty(obj) {
-  return !Object.keys(obj).length;
-}
-
 class EmailCommand extends Command {
-  static args = [
-    {
-      name: 'email',
-      required: true,
-      description: 'the email address that will send the form submission emails',
-    },
-    {
-      name: 'name',
-      required: false,
-      description: 'name of the form - must be unique',
-      dependsOn: ['validate']
-    },
-  ]
-  static flags = {
-    new: flags.boolean({
-      char: 'n',                    
-      description: 'verifies a new email address to be used by AWS SES to send email',
-      multiple: false,
-      required: false,
-      default: false    
-    }),
-    validate: flags.boolean({
-      char: 'v',                    
-      description: 'validates that the provided email address was verified with AWS SES',
-      multiple: false,
-      required: false,  
-    }),
-    /*
-    provider: flags.string({
-      char: 'p',                    
-      description: 'the provider of the email service. SES | GMAIL',
-      multiple: false,
-      required: false,
-      options: ['SES', 'GMAIL'],
-      default: 'SES'    
-    }),
-    */
-  }
-
   async run() {
     const {args, flags} = this.parse(EmailCommand)
     if(flags.new){
@@ -78,6 +35,7 @@ class EmailCommand extends Command {
               }
               else {
                 console.error('please confirm the verification email and try again')
+                cli.action.stop('Error')
               }
             })
           }
@@ -101,12 +59,48 @@ class EmailCommand extends Command {
         }
       })
     }
-    else {
-      console.error('you must either create or validate the template')
-    }
   } 
 }
 
-EmailCommand.description = `Builds an html form`
+EmailCommand.args = [
+  {
+    name: 'email',
+    required: true,
+    description: 'the email address that will send the form submission emails',
+  },
+  {
+    name: 'name',
+    required: false,
+    description: 'name of the form - must be unique',
+    dependsOn: ['validate']
+  },
+]
+EmailCommand.flags = {
+  new: flags.boolean({
+    char: 'n',                    
+    description: 'verifies a new email address to be used by AWS SES to send email',
+    multiple: false,
+    required: false,
+    default: false    
+  }),
+  validate: flags.boolean({
+    char: 'v',                    
+    description: 'validates that the provided email address was verified with AWS SES',
+    multiple: false,
+    required: false,  
+  }),
+  /*
+  provider: flags.string({
+    char: 'p',                    
+    description: 'the provider of the email service. SES | GMAIL',
+    multiple: false,
+    required: false,
+    options: ['SES', 'GMAIL'],
+    default: 'SES'    
+  }),
+  */
+}
+
+EmailCommand.description = `Verifies/validates your email with AWS SES`
 
 module.exports = EmailCommand

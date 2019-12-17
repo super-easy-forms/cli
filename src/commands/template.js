@@ -7,38 +7,6 @@ function isEmpty(obj) {
 }
 
 class TemplateCommand extends Command {
-  static args = [
-    {
-      name: 'name',
-      required: true,
-      description: 'name of the form - must be unique',
-    },
-  ]
-  static flags = {
-    create: flags.boolean({
-      char: 'c',
-      default: false,
-      description: 'Create a new cloudformation temmplate and saves it locally',
-    }),
-    validate: flags.boolean({
-      char: 'v',
-      default: true,
-      description: 'Validate your cloudformation template with AWS',
-    }),
-    email: flags.string({
-      char: 'e',                    
-      description: 'Email address that will be used to send emails',
-      multiple: false,
-      required: false         
-    }), 
-    fields: flags.string({
-      char: 'f',                    
-      description: 'Desired form formFields',
-      multiple: false,
-      required: false         
-    }),
-  }
-
   async run() {
     const {args, flags} = this.parse(TemplateCommand)
     let options = {"email":null, "formFields":null};
@@ -96,10 +64,42 @@ class TemplateCommand extends Command {
     }
     else {
       console.error('you must either create or validate the template')
+      cli.action.stop('Error')
     }
   } 
 }
-    
+
+TemplateCommand.args = [
+  {
+    name: 'name',
+    required: true,
+    description: 'name of the form - must be unique',
+  },
+]
+TemplateCommand.flags = {
+  create: flags.boolean({
+    char: 'c',
+    default: false,
+    description: 'Create a new cloudformation temmplate and saves it locally',
+  }),
+  validate: flags.boolean({
+    char: 'v',
+    default: true,
+    description: 'Validate your cloudformation template with AWS',
+  }),
+  email: flags.string({
+    char: 'e',                    
+    description: 'Email address that will be used to send emails',
+    multiple: false,
+    required: false         
+  }), 
+  fields: flags.string({
+    char: 'f',                    
+    description: 'Desired form formFields',
+    multiple: false,
+    required: false         
+  }),
+}
 
 TemplateCommand.description = `validate/create/update your cloudformation template saved locally`
 

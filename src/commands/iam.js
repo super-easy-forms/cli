@@ -4,26 +4,6 @@ const {cli} = require('cli-ux');
 const open = require('open');
 
 class IamCommand extends Command {
-  static args = [
-    {
-      name: 'user',
-      required: true,
-      description: 'name of the IAM user',
-    },
-    {
-      name: 'region',
-      required: false,
-      description: 'your desired AWS region.',
-    },
-  ]
-  static flags = {
-    create: flags.boolean({
-      char: 'c',
-      default: true,
-      description: 'Helps you create an IAM user and adds its profile to the .env file',
-    }),
-  }
-
   async run() {
     const {args, flags} = this.parse(IamCommand)
     let region = null;
@@ -45,6 +25,26 @@ class IamCommand extends Command {
       })
     }
   } 
+}
+
+IamCommand.args = [
+  {
+    name: 'user',
+    required: true,
+    description: 'name of the IAM user',
+  },
+  {
+    name: 'region',
+    required: false,
+    description: 'your desired AWS region.',
+  },
+]
+IamCommand.flags = {
+  create: flags.boolean({
+    char: 'c',
+    default: true,
+    description: 'Helps you create an IAM user and adds its profile to the .env file',
+  }),
 }
 
 IamCommand.description = `the --create flag will open up a window with the AWS console so that you confirm the creation of a user with the entered name.`

@@ -2,31 +2,7 @@ const {Command,flags} = require('@oclif/command')
 const SEF = require('super-easy-forms')
 const {cli} = require('cli-ux');
 
-class Deploy extends Command {
-  static args = [
-    {
-      name: 'name',
-      required: true,
-      description: 'name of the form you want to delete',
-    },
-  ]
-  static flags = {
-    create: flags.boolean({
-      char: 'c',                    
-      description: 'Deploy a new cloudformation stack in the AWS cloud',
-      multiple: false,
-      required: false,
-      exclusive: ['update']         
-    }), 
-    update: flags.boolean({
-      char: 'u',                    
-      description: 'Update your stack in the AWS cloud',
-      multiple: false,
-      required: false,
-      exclusive: ['create']         
-    })
-  }
-
+class DeployCommand extends Command {
   async run() {
     const {args, flags} = this.parse(Deploy)
     if(flags.create){
@@ -66,8 +42,32 @@ class Deploy extends Command {
   } 
 }
 
-Deploy.description = `Deploys your stack in the AWS Cloud`
+DeployCommand.args = [
+  {
+    name: 'name',
+    required: true,
+    description: 'name of the form you want to delete',
+  }
+]
+DeployCommand.flags = {
+  create: flags.boolean({
+    char: 'c',                    
+    description: 'Deploy a new cloudformation stack in the AWS cloud',
+    multiple: false,
+    required: false,
+    exclusive: ['update']         
+  }), 
+  update: flags.boolean({
+    char: 'u',                    
+    description: 'Update your stack in the AWS cloud',
+    multiple: false,
+    required: false,
+    exclusive: ['create']         
+  })
+}
 
-module.exports = Deploy
+DeployCommand.description = `Deploys your stack in the AWS Cloud`
+
+module.exports = DeployCommand
 
 

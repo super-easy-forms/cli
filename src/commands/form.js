@@ -8,34 +8,6 @@ function isEmpty(obj) {
 }
 
 class FormCommand extends Command {
-  static args = [
-    {
-      name: 'name',
-      required: true,
-      description: 'name of the form - must be unique',
-    },
-  ]
-  static flags = {
-    fields: flags.string({
-      char: 'f',                    
-      description: 'Desired form formFields',
-      multiple: false,
-      required: false         
-    }), 
-    labels: flags.boolean({
-      char: 'l',
-      default: true,
-      description: 'Automatically add labels to your form',
-      dependsOn: ['fields']
-    }),
-      url: flags.string({
-      char: 'u',                    
-      description: 'The API endpoint endpointUrl for your form',
-      multiple: false,
-      required: false         
-    }),
-  }
-
   async run() {
     const {args, flags} = this.parse(FormCommand)
     let options = {endpointUrl:null, formFields:null};
@@ -61,13 +33,42 @@ class FormCommand extends Command {
     }
     cli.action.start('Generating your form')
     SEF.CreateForm(args.name, options, function(err, data){
-      if(err) console.error(err)
+      if(err) {
+        console.error(err)
+        cli.action.stop('Error')
+      }
       else{
         open(`forms/${args.name}/${args.name}.html`);
         cli.action.stop()
       }
     })
   } 
+}
+
+FormCommand.args =   [{
+  name: 'name',
+  required: true,
+  description: 'name of the form - must be unique',
+}]
+FormCommand.flags = {
+  fields: flags.string({
+    char: 'f',                    
+    description: 'Desired form formFields',
+    multiple: false,
+    required: false         
+  }), 
+  labels: flags.boolean({
+    char: 'l',
+    default: true,
+    description: 'Automatically add labels to your form',
+    dependsOn: ['fields']
+  }),
+    url: flags.string({
+    char: 'u',                    
+    description: 'The API endpoint endpointUrl for your form',
+    multiple: false,
+    required: false         
+  }),
 }
 
 FormCommand.description = `Builds an html form`
