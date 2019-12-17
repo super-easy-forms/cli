@@ -45,7 +45,6 @@ class FormCommand extends Command {
   } 
 }
 
-FormCommand.description = `Builds an html form`
 FormCommand.args =   [{
   name: 'name',
   required: true,
@@ -71,5 +70,7 @@ FormCommand.flags = {
     required: false         
   }),
 }
+
+FormCommand.description = `Builds an html form`
 
 module.exports = FormCommand

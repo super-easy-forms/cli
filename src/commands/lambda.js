@@ -7,35 +7,6 @@ function isEmpty(obj) {
 }
 
 class LambdaCommand extends Command {
-  static args = [
-    {
-      name: 'name',
-      required: true,
-      description: 'name of the form - must be unique',
-    },
-  ]
-  static flags = {
-    email: flags.string({
-      char: 'e',                    
-      description: 'Email address that will be used to send emails',
-      multiple: false,
-      required: false         
-    }), 
-    recipients: flags.string({
-      char: 'r',                    
-      description: 'Recipients that will recieve emails on your behalf.',
-      parse: input => input.split(","),
-      multiple: false,
-      required: false         
-    }), 
-    fields: flags.string({
-      char: 'f',                    
-      description: 'Desired form formFields',
-      multiple: false,
-      required: false         
-    })
-  }
-
   async run() {
     const {args, flags} = this.parse(LambdaCommand)
     let options = {email:null, formFields:null, recipients:null};
@@ -67,7 +38,36 @@ class LambdaCommand extends Command {
   } 
 }
 
-LambdaCommand.description = `Builds an html form`
+LambdaCommandargs = [
+  {
+    name: 'name',
+    required: true,
+    description: 'name of the form - must be unique',
+  },
+]
+LambdaCommandflags = {
+  email: flags.string({
+    char: 'e',                    
+    description: 'Email address that will be used to send emails',
+    multiple: false,
+    required: false         
+  }), 
+  recipients: flags.string({
+    char: 'r',                    
+    description: 'Recipients that will recieve emails on your behalf.',
+    parse: input => input.split(","),
+    multiple: false,
+    required: false         
+  }), 
+  fields: flags.string({
+    char: 'f',                    
+    description: 'Desired form formFields',
+    multiple: false,
+    required: false         
+  })
+}
+
+LambdaCommand.description = `Generates a lambda function and saves it as lambdaFunction.js in the formNames folder`
 
 module.exports = LambdaCommand
 

@@ -11,8 +11,12 @@ function promptemail(email, callback){
   readline.question(`have you finished confirming the email?`, (res) => {
     if(res === 'y' || res === 'Y' || res === 'yes'){
       SEF.ValidateSesEmail(email, function(err, data){
-        if(data){
-          callback()
+        if(err){
+          console.error(err)
+          cli.action.stop('Error')
+        }
+        else if(data){
+          callback(true)
         }
         else {
           console.log("email hasnt been validated")
@@ -30,41 +34,63 @@ function isEmpty(obj) {
   return !Object.keys(obj).length;
 }
 
-class FullformCommand extends Command {
-  static args = [
-    {
-      name: 'name',
-      required: true,
-      description: 'name of the form - must be unique',
-    },
-  ]
-  static flags = {
-    email: flags.string({
-      char: 'e',                    
-      description: 'Email address that will be used to send emails',
-      multiple: false,
-      required: false         
-    }), 
-    recipients: flags.string({
-      char: 'r',                    
-      description: 'Recipients that will recieve emails on your behalf.',
-      parse: input => input.split(","),
-      multiple: false,
-      required: false         
-    }), 
-    fields: flags.string({
-      char: 'f',                    
-      description: 'Desired form formFields',
-      multiple: false,
-      required: false         
-    }), 
-    labels: flags.boolean({
-      char: 'l',
-      default: true,
-      description: 'Automatically add labels to your form',
-    })
-  }
+function backend(cliaction, args, params, options){
+  cliaction.start('Generating your lambda function')
+  SEF.CreateLambdaFunction(args.name, options, function(err, data){
+    if(err) {
+      console.error(err.message)
+      cliaction.stop('Error')
+    }
+    else {
+      params["lambdaFunction"] = data;
+      cliaction.stop()
+      cliaction.start('Generating your cloudformation template')
+      SEF.CreateTemplate(args.name, params, function(err, data){
+        if(err) {
+          console.error(err.message)
+          cliaction.stop('Error')
+        }
+        else {
+          cliaction.stop()
+          cliaction.start('Creating your stack in the AWS cloud')
+          SEF.CreateStack(args.name, data, function(err, data){
+            if(err) {
+              console.error(err)
+              cliaction.stop()
+            }
+            else {
+              cliaction.stop()
+              cliaction.start('Fetching your API enpoint URL')
+              SEF.GetApiUrl(args.name, data, function(err, res){
+                if(err) {
+                  console.error(err.message)
+                  cliaction.stop('Error')
+                }
+                else {
+                  cliaction.stop()
+                  cliaction.start('Generating your form')
+                  options["endpointUrl"] = res; 
+                  SEF.CreateForm(args.name, options, function(err, data){
+                    if(err) {
+                      console.error(err.message)
+                      cliaction.stop('Error')
+                    }
+                    else {
+                      cliaction.stop()
+                      open(`forms/${args.name}/${args.name}.html`);
+                    }
+                  })
+                }
+              })
+            }
+          })
+        }
+      }) 
+    }
+  })
+}
 
+class FullformCommand extends Command {
   async run() {
     const {args, flags} = this.parse(FullformCommand)
     let options = {email:null, formFields:null, recipients:null};
@@ -100,51 +126,27 @@ class FullformCommand extends Command {
         cli.action.stop()
         cli.action.start('Verifying email')
         SEF.SesEmail(args.name, options, function(err, data){
-          if(err) throw new Error(Err)
+          if(err) {
+            console.error(err)
+            cli.action.stop('Error')
+          }
           else if(data){
             cli.action.stop()
-            cli.action.start('Generating your lambda function')
-            SEF.CreateLambdaFunction(args.name, options, function(err, data){
-              if(err) console.error(err.message)
-              else {
-                params["lambdaFunction"] = data;
-                cli.action.stop()
-                cli.action.start('Generating your cloudformation template')
-                SEF.CreateTemplate(args.name, params, function(err, data){
-                  if(err) console.error(err.message)
-                  else {
-                    cli.action.stop()
-                    cli.action.start('Creating your stack in the AWS cloud')
-                    SEF.CreateStack(args.name, data, function(err, data){
-                      if(err) console.error(err)
-                      else {
-                        cli.action.stop()
-                        cli.action.start('Fetching your API enpoint URL')
-                        SEF.GetApiUrl(args.name, data, function(err, data){
-                          if(err) console.error(err.message)
-                          else {
-                            cli.action.stop()
-                            cli.action.start('Generating your form')
-                            options["endpointUrl"] = data; 
-                            SEF.CreateForm(args.name, options, function(err, data){
-                              if(err) console.error(err.message)
-                              else {
-                                cli.action.stop()
-                                open(`forms/${args.name}/${args.name}.html`);
-                              }
-                            })
-                          }
-                        })
-                      }
-                    })
-                  }
-                }) 
-              }
-            })
+            backend(cli.action, args, options)
           }
           else {
             console.log(`email confirmation has been sent to ${options.email}`)
-            promptemail(options.email, console.log("SUCCESS"))
+            promptemail(options.email, function(err, data){
+              if(err){
+                console.error(err)
+                cli.action.stop('Error')
+              }
+              else if(data){
+                cli.action.stop()
+                backend(cli.action, args, params, options)
+              }
+              else cli.action.stop('Error')
+            })
           }
         })
       }
@@ -152,6 +154,40 @@ class FullformCommand extends Command {
   } 
 }
 
-FullformCommand.description = `Builds an html form`
+FullformCommand.args = [
+  {
+    name: 'name',
+    required: true,
+    description: 'name of the form - must be unique',
+  },
+]
+FullformCommand.flags = {
+  email: flags.string({
+    char: 'e',                    
+    description: 'Email address that will be used to send emails',
+    multiple: false,
+    required: false         
+  }), 
+  recipients: flags.string({
+    char: 'r',                    
+    description: 'Recipients that will recieve emails on your behalf.',
+    parse: input => input.split(","),
+    multiple: false,
+    required: false         
+  }), 
+  fields: flags.string({
+    char: 'f',                    
+    description: 'Desired form formFields',
+    multiple: false,
+    required: false         
+  }), 
+  labels: flags.boolean({
+    char: 'l',
+    default: true,
+    description: 'Automatically add labels to your form',
+  })
+}
+
+FullformCommand.description = `Generates an html form and saves it in the formNames folder`
 
 module.exports = FullformCommand
