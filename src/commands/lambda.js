@@ -30,7 +30,10 @@ class LambdaCommand extends Command {
     }
     cli.action.start('Generating your lambda function')
     SEF.CreateLambdaFunction(args.name, options, function(err, data){
-      if(err) console.error(err)
+      if(err) {
+        console.error(err)
+        cli.action.stop('Error')
+      }
       else{
         cli.action.stop()
       }
@@ -38,14 +41,14 @@ class LambdaCommand extends Command {
   } 
 }
 
-LambdaCommandargs = [
+LambdaCommand.args = [
   {
     name: 'name',
     required: true,
     description: 'name of the form - must be unique',
   },
 ]
-LambdaCommandflags = {
+LambdaCommand.flags = {
   email: flags.string({
     char: 'e',                    
     description: 'Email address that will be used to send emails',

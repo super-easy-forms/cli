@@ -1,7 +1,7 @@
 {
   "name": "super-easy-forms-cli",
   "description": "a CLI for super-easy-forms",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "author": "gkpty @gkpty",
   "bin": {
     "sef": "./bin/run"
