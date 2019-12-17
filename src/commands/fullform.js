@@ -132,7 +132,7 @@ class FullformCommand extends Command {
           }
           else if(data){
             cli.action.stop()
-            backend(cli.action, args, options)
+            backend(cli.action, args, params, options)
           }
           else {
             console.log(`email confirmation has been sent to ${options.email}`)
