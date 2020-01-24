@@ -36,6 +36,7 @@ class FormCommand extends Command {
     }
     cli.action.start('Generating your form')
     SEF.CreateForm(args.name, options, function(err, data){
+      //console.log(options)
       if(err) {
         console.error(err)
         cli.action.stop('Error')
@@ -76,7 +77,8 @@ FormCommand.flags = {
     char: 'r',                    
     description: 'Adds recaptcha elements and scripts to the form',
     multiple: false,
-    required: false,  
+    required: false,
+    default: false  
   }),
 }
 
