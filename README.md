@@ -48,6 +48,10 @@ Builds the required base files and directories.
 ```
 USAGE
   $ sef build
+
+OPTIONS
+  -p, --profile=profile  The name of the iam profile/user that you want to create
+  -r, --region=region    The desired AWS region were your forms infrastructure will be deployed
 ```
 
 _See code: [src/commands/build.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/build.js)_

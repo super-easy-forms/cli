@@ -11,7 +11,6 @@ class IamCommand extends Command {
       region = args.region
     }
     if(flags.create){
-      cli.action.start('Create your IAM user and hold on to the credentials')
        SEF.CreateIamUser(args.user, region, function(err, data){
         if(err) {
           console.error(err)
@@ -20,7 +19,7 @@ class IamCommand extends Command {
         else{
           open(data);
           cli.action.stop()
-          console.log('Then create a new AWS profile in your machine with the name of the IAM user and reference it in your projects .env file')
+          console.log('Finish creating the IAM user and update the local profile in your machine')
         }
       })
     }

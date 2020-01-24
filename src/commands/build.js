@@ -22,7 +22,7 @@ class BuildCommand extends Command {
             else{
               open(data);
               cli.action.stop()
-              console.log('Finish creating the IAM user and update your local profile')
+              console.log('Finish creating the IAM user and update the local profile in your machine')
             }
           })
         }
