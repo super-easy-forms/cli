@@ -22,7 +22,7 @@ class BuildCommand extends Command {
             else{
               open(data);
               cli.action.stop()
-              console.log('Then create a new AWS profile in your machine with the name of the IAM user and reference it in your projects .env file')
+              console.log('Finish creating the IAM user and update your local profile')
             }
           })
         }
