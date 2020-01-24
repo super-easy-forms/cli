@@ -23,6 +23,9 @@ class FormCommand extends Command {
         options.formFields = SEF.ParseFields(flags.fields, false);
       }
     }
+    if(flags.recaptcha){
+      options.recaptcha = true;
+    }
     Object.keys(options).map(function(key, index) {
       if(options[key]){
         params[key] = options[key]
@@ -63,11 +66,17 @@ FormCommand.flags = {
     description: 'Automatically add labels to your form',
     dependsOn: ['fields']
   }),
-    url: flags.string({
+  url: flags.string({
     char: 'u',                    
     description: 'The API endpoint endpointUrl for your form',
     multiple: false,
     required: false         
+  }),
+  recaptcha: flags.boolean({
+    char: 'r',                    
+    description: 'Adds recaptcha elements and scripts to the form',
+    multiple: false,
+    required: false,  
   }),
 }
 
