@@ -20,6 +20,15 @@ class LambdaCommand extends Command {
     if(flags.fields){
       options.fields = flags.feilds
     }
+    if(flags.captcha){
+      options.captcha = true;
+    }
+    if(flags.zip){
+      options.zip = true;
+    }
+    if(flags.store){
+      options.store = true;
+    }
     Object.keys(options).map(function(key, index) {
       if(options[key]){
         params[key] = options[key]
@@ -67,6 +76,27 @@ LambdaCommand.flags = {
     description: 'Desired form formFields',
     multiple: false,
     required: false         
+  }),
+  captcha: flags.boolean({
+    char: 'c',                    
+    description: 'Adds recaptcha elements to the lambda function',
+    multiple: false,
+    required: false,
+  }),
+  zip: flags.boolean({
+    char: 'z',                    
+    description: 'zips the lambda function',
+    multiple: false,
+    required: false,
+    default: true  
+  }),
+  store: flags.boolean({
+    char: 's',                    
+    description: 'creates a new s3 bucket and uploads the zipped lambda function',
+    multiple: false,
+    required: false,
+    default: true,
+    dependsOn: ["zip"]  
   })
 }
 
