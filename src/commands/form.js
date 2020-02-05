@@ -23,8 +23,8 @@ class FormCommand extends Command {
         options.formFields = SEF.ParseFields(flags.fields, false);
       }
     }
-    if(flags.recaptcha){
-      options.recaptcha = true;
+    if(flags.captcha){
+      options.captcha = true;
     }
     Object.keys(options).map(function(key, index) {
       if(options[key]){
@@ -73,8 +73,8 @@ FormCommand.flags = {
     multiple: false,
     required: false         
   }),
-  recaptcha: flags.boolean({
-    char: 'r',                    
+  captcha: flags.boolean({
+    char: 'c',                    
     description: 'Adds recaptcha elements and scripts to the form',
     multiple: false,
     required: false,
