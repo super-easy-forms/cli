@@ -36,13 +36,14 @@ function isEmpty(obj) {
 
 function backend(cliaction, args, params, options){
   cliaction.start('Generating your lambda function')
+  options['zip'] = true;
+  options['store'] = true
   SEF.CreateLambdaFunction(args.name, options, function(err, data){
     if(err) {
       console.error(err.message)
       cliaction.stop('Error')
     }
     else {
-      params["lambdaFunction"] = data;
       cliaction.stop()
       cliaction.start('Generating your cloudformation template')
       SEF.CreateTemplate(args.name, params, function(err, data){
@@ -96,10 +97,19 @@ class FullformCommand extends Command {
     let options = {email:null, formFields:null, recipients:null};
     let params = {};
     if(flags.email){
-      options.email = flags.email
+      options.email = flags.email;
     }
     if(flags.recipients){
-      options["recipients"] = flags.recipients
+      options.recipients = flags.recipients;
+    }
+    if(flags.message){
+      options.message = flags.message;
+    }
+    if(flags.subject){
+      options.subject = flags.subject;
+    }
+    if(flags.captcha){
+      options.captcha = true;
     }
     if(flags.fields){
       if(flags.labels){
@@ -180,12 +190,25 @@ FullformCommand.flags = {
     description: 'Desired form formFields',
     multiple: false,
     required: false         
-  }), 
-  labels: flags.boolean({
-    char: 'l',
+  }),
+  message: flags.string({
+    char: 'm',                    
+    description: 'the email message body. you can use html and you can use <FormOutput> to include the information from the form submission',
+    multiple: false,
+    required: false         
+  }),  
+  subject: flags.boolean({
+    char: 's',
     default: true,
-    description: 'Automatically add labels to your form',
-  })
+    description: 'the subject of the email message',
+  }),
+  captcha: flags.boolean({
+    char: 'c',                    
+    description: 'Adds recaptcha elements and scripts to the form and lambda function',
+    multiple: false,
+    required: false,
+    default: false  
+  }),
 }
 
 FullformCommand.description = `Generates an html form and saves it in the formNames folder`
