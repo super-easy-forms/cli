@@ -37,7 +37,7 @@ function isEmpty(obj) {
 function backend(cliaction, args, params, options){
   cliaction.start('Generating your lambda function')
   options['zip'] = true;
-  options['store'] = true
+  options['functionBucket'] = true
   SEF.CreateLambdaFunction(args.name, options, function(err, data){
     if(err) {
       console.error(err.message)
