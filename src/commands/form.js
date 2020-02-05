@@ -64,8 +64,7 @@ FormCommand.flags = {
   labels: flags.boolean({
     char: 'l',
     default: true,
-    description: 'Automatically add labels to your form',
-    dependsOn: ['fields']
+    description: 'Automatically add labels to your form'
   }),
   url: flags.string({
     char: 'u',                    
