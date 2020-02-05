@@ -21,10 +21,10 @@ class LambdaCommand extends Command {
       options.fields = flags.fields
     }
     if(flags.message){
-      options.message = flags.message
+      options["emailMessage"] = flags.message
     }
     if(flags.subject){
-      options.subject = flags.subject
+      options["emailSubject"] = flags.subject
     }
     if(flags.captcha){
       options.captcha = true;
@@ -33,7 +33,7 @@ class LambdaCommand extends Command {
       options.zip = true;
     }
     if(flags.bucket){
-      options.bucket = true;
+      options["functionBucket"] = true;
     }
     Object.keys(options).map(function(key, index) {
       if(options[key]){

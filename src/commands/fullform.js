@@ -103,10 +103,10 @@ class FullformCommand extends Command {
       options.recipients = flags.recipients;
     }
     if(flags.message){
-      options.message = flags.message;
+      options["emailMessage"] = flags.message;
     }
     if(flags.subject){
-      options.subject = flags.subject;
+      options["emailSubject"] = flags.subject;
     }
     if(flags.captcha){
       options.captcha = true;
