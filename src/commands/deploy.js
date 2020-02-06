@@ -4,7 +4,7 @@ const {cli} = require('cli-ux');
 
 class DeployCommand extends Command {
   async run() {
-    const {args, flags} = this.parse(Deploy)
+    const {args, flags} = this.parse(DeployCommand)
     if(flags.create){
       cli.action.start('Creating your stack in the AWS cloud')
       SEF.CreateStack(args.name, function(err, data){

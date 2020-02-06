@@ -10,7 +10,7 @@ function isEmpty(obj) {
 class FormCommand extends Command {
   async run() {
     const {args, flags} = this.parse(FormCommand)
-    let options = {endpointUrl:null, formFields:null};
+    let options = {};
     let params = {};
     if(flags.url){
       options.endpointUrl = flags.url
