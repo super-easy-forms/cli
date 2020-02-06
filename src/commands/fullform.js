@@ -94,7 +94,7 @@ function backend(cliaction, args, params, options){
 class FullformCommand extends Command {
   async run() {
     const {args, flags} = this.parse(FullformCommand)
-    let options = {email:null, formFields:null, recipients:null};
+    let options = {};
     let params = {};
     if(flags.email){
       options.email = flags.email;
