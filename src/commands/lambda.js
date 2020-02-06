@@ -56,6 +56,7 @@ class LambdaCommand extends Command {
       })
     }
     else if(args.action === 'update'){
+      cli.action.start('Updating your lambda function deployment package')
       SEF.UpdateLambdaFunction(args.name, function(err, data){
         if(err) {
           console.error(err)
