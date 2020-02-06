@@ -9,7 +9,7 @@ function isEmpty(obj) {
 class LambdaCommand extends Command {
   async run() {
     const {args, flags} = this.parse(LambdaCommand)
-    let options = {email:null, formFields:null, recipients:null};
+    let options = {};
     let params = {};
     if(flags.email){
       options.email = flags.email
@@ -44,7 +44,7 @@ class LambdaCommand extends Command {
       options = null;
     }
     if(args.action === 'create'){
-      cli.action.start('Generating your lambda function')
+      cli.action.start('Generating your lambda function deployment package')
       SEF.CreateLambdaFunction(args.name, options, function(err, data){
         if(err) {
           console.error(err)
@@ -108,12 +108,13 @@ LambdaCommand.flags = {
     description: 'the email message body. you can use html and you can use <FormOutput> to include the information from the form submission',
     multiple: false,
     required: false         
-  }),  
-  subject: flags.boolean({
-    char: 's',
-    default: true,
-    description: 'the subject of the email message',
   }),
+  subject: flags.string({
+    char: 's',                    
+    description: 'the subject of the email message',
+    multiple: false,
+    required: false         
+  }),  
   captcha: flags.boolean({
     char: 'c',                    
     description: 'Adds recaptcha elements to the lambda function',
@@ -124,16 +125,13 @@ LambdaCommand.flags = {
     char: 'z',                    
     description: 'zips the lambda function',
     multiple: false,
-    required: false,
     default: false  
   }),
   bucket: flags.boolean({
     char: 'b',                    
     description: 'creates a new s3 bucket and uploads the zipped lambda function',
     multiple: false,
-    required: false,
-    default: false,
-    dependsOn: ["zip"]  
+    default: false
   })
 }
 
