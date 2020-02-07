@@ -191,17 +191,23 @@ FullformCommand.flags = {
     multiple: false,
     required: false         
   }),
+  labels: flags.boolean({
+    char: 'l',
+    default: true,
+    description: 'Automatically add labels to your form'
+  }),
   message: flags.string({
     char: 'm',                    
     description: 'the email message body. you can use html and you can use <FormOutput> to include the information from the form submission',
     multiple: false,
     required: false         
-  }),  
-  subject: flags.boolean({
-    char: 's',
-    default: true,
-    description: 'the subject of the email message',
   }),
+  subject: flags.string({
+    char: 's',                    
+    description: 'the subject of the email message',
+    multiple: false,
+    required: false         
+  }),    
   captcha: flags.boolean({
     char: 'c',                    
     description: 'Adds recaptcha elements and scripts to the form and lambda function',
