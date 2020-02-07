@@ -51,10 +51,11 @@ class EmailCommand extends Command {
           cli.action.stop('Error')
         }
         else if(data){
+          console.log('Your email has been verified by AWS SES')
           cli.action.stop()
         }
         else {
-          console.error('Your email hasnt been confirmed yet.')
+          console.error('Your email still hasnt been verified.')
           cli.action.stop('Error')
         }
       })
