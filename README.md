@@ -19,7 +19,7 @@ $ npm install -g super-easy-forms-cli
 $ sef COMMAND
 running command...
 $ sef (-v|--version|version)
-super-easy-forms-cli/1.0.4 linux-x64 node-v12.13.1
+super-easy-forms-cli/1.0.5 linux-x64 node-v12.13.1
 $ sef --help [COMMAND]
 USAGE
   $ sef COMMAND
@@ -36,7 +36,8 @@ USAGE
 * [`sef fullform NAME`](#sef-fullform-name)
 * [`sef help [COMMAND]`](#sef-help-command)
 * [`sef iam USER [REGION]`](#sef-iam-user-region)
-* [`sef lambda NAME`](#sef-lambda-name)
+* [`sef init`](#sef-init)
+* [`sef lambda NAME [ACTION]`](#sef-lambda-name-action)
 * [`sef submissions NAME`](#sef-submissions-name)
 * [`sef template NAME`](#sef-template-name)
 * [`sef variable NAME VARIABLE VALUE`](#sef-variable-name-variable-value)
@@ -54,7 +55,7 @@ OPTIONS
   -r, --region=region    The desired AWS region were your forms infrastructure will be deployed
 ```
 
-_See code: [src/commands/build.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/build.js)_
+_See code: [src/commands/build.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/build.js)_
 
 ## `sef delete NAME`
 
@@ -71,7 +72,7 @@ OPTIONS
   -r, --resources  Delete all of the back-end resources for your form in the cloud
 ```
 
-_See code: [src/commands/delete.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/delete.js)_
+_See code: [src/commands/delete.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/delete.js)_
 
 ## `sef deploy NAME`
 
@@ -89,7 +90,7 @@ OPTIONS
   -u, --update  Update your stack in the AWS cloud
 ```
 
-_See code: [src/commands/deploy.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/deploy.js)_
+_See code: [src/commands/deploy.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/deploy.js)_
 
 ## `sef email EMAIL [NAME]`
 
@@ -108,7 +109,7 @@ OPTIONS
   -v, --validate  validates that the provided email address was verified with AWS SES
 ```
 
-_See code: [src/commands/email.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/email.js)_
+_See code: [src/commands/email.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/email.js)_
 
 ## `sef form NAME`
 
@@ -122,12 +123,13 @@ ARGUMENTS
   NAME  name of the form - must be unique
 
 OPTIONS
+  -c, --captcha        Adds recaptcha elements and scripts to the form
   -f, --fields=fields  Desired form formFields
   -l, --labels         Automatically add labels to your form
   -u, --url=url        The API endpoint endpointUrl for your form
 ```
 
-_See code: [src/commands/form.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/form.js)_
+_See code: [src/commands/form.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/form.js)_
 
 ## `sef fullform NAME`
 
@@ -141,13 +143,19 @@ ARGUMENTS
   NAME  name of the form - must be unique
 
 OPTIONS
+  -c, --captcha                Adds recaptcha elements and scripts to the form and lambda function
   -e, --email=email            Email address that will be used to send emails
   -f, --fields=fields          Desired form formFields
-  -l, --labels                 Automatically add labels to your form
+
+  -m, --message=message        the email message body. you can use html and you can use <FormOutput> to include the
+                               information from the form submission
+
   -r, --recipients=recipients  Recipients that will recieve emails on your behalf.
+
+  -s, --subject                the subject of the email message
 ```
 
-_See code: [src/commands/fullform.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/fullform.js)_
+_See code: [src/commands/fullform.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/fullform.js)_
 
 ## `sef help [COMMAND]`
 
@@ -182,26 +190,51 @@ OPTIONS
   -c, --create  Helps you create an IAM user and adds its profile to the .env file
 ```
 
-_See code: [src/commands/iam.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/iam.js)_
+_See code: [src/commands/iam.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/iam.js)_
 
-## `sef lambda NAME`
+## `sef init NAME`
+
+Creates a config file with empty values for your form.
+
+```
+USAGE
+  $ sef init NAME
+
+ARGUMENTS
+  NAME    name of the form - must be unique
+```
+
+_See code: [src/commands/init.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/init.js)_
+
+## `sef lambda NAME [ACTION]`
 
 Generates a lambda function and saves it as lambdaFunction.js in the formNames folder
 
 ```
 USAGE
-  $ sef lambda NAME
+  $ sef lambda NAME [ACTION]
 
 ARGUMENTS
-  NAME  name of the form - must be unique
+  NAME    name of the form - must be unique
+  ACTION  (create|update) [default: create] action to perform to the lambda function - create or update
 
 OPTIONS
+  -b, --bucket                 creates a new s3 bucket and uploads the zipped lambda function
+  -c, --captcha                Adds recaptcha elements to the lambda function
   -e, --email=email            Email address that will be used to send emails
   -f, --fields=fields          Desired form formFields
+
+  -m, --message=message        the email message body. you can use html and you can use <FormOutput> to include the
+                               information from the form submission
+
   -r, --recipients=recipients  Recipients that will recieve emails on your behalf.
+
+  -s, --subject                the subject of the email message
+
+  -z, --zip                    zips the lambda function
 ```
 
-_See code: [src/commands/lambda.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/lambda.js)_
+_See code: [src/commands/lambda.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/lambda.js)_
 
 ## `sef submissions NAME`
 
@@ -220,7 +253,7 @@ OPTIONS
   -l, --list             print all submissions for the form to stdout
 ```
 
-_See code: [src/commands/submissions.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/submissions.js)_
+_See code: [src/commands/submissions.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/submissions.js)_
 
 ## `sef template NAME`
 
@@ -240,7 +273,7 @@ OPTIONS
   -v, --validate       Validate your cloudformation template with AWS
 ```
 
-_See code: [src/commands/template.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/template.js)_
+_See code: [src/commands/template.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/template.js)_
 
 ## `sef variable NAME VARIABLE VALUE`
 
@@ -256,7 +289,7 @@ ARGUMENTS
   VALUE     value of the variable
 ```
 
-_See code: [src/commands/variable.js](https://github.com/gkpty/super-easy-forms-cli/blob/v1.0.4/src/commands/variable.js)_
+_See code: [src/commands/variable.js](https://github.com/gkpty/super-easy-forms-cli/tree/master/src/commands/variable.js)_
 <!-- commandsstop -->
 * [`sef build`](#sef-build)
 * [`sef email`](#sef-email)

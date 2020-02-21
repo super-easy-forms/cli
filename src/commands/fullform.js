@@ -36,13 +36,14 @@ function isEmpty(obj) {
 
 function backend(cliaction, args, params, options){
   cliaction.start('Generating your lambda function')
+  options['zip'] = true;
+  options['functionBucket'] = true
   SEF.CreateLambdaFunction(args.name, options, function(err, data){
     if(err) {
       console.error(err.message)
       cliaction.stop('Error')
     }
     else {
-      params["lambdaFunction"] = data;
       cliaction.stop()
       cliaction.start('Generating your cloudformation template')
       SEF.CreateTemplate(args.name, params, function(err, data){
@@ -93,13 +94,22 @@ function backend(cliaction, args, params, options){
 class FullformCommand extends Command {
   async run() {
     const {args, flags} = this.parse(FullformCommand)
-    let options = {email:null, formFields:null, recipients:null};
+    let options = {};
     let params = {};
     if(flags.email){
-      options.email = flags.email
+      options.email = flags.email;
     }
     if(flags.recipients){
-      options["recipients"] = flags.recipients
+      options.recipients = flags.recipients;
+    }
+    if(flags.message){
+      options["emailMessage"] = flags.message;
+    }
+    if(flags.subject){
+      options["emailSubject"] = flags.subject;
+    }
+    if(flags.captcha){
+      options.captcha = true;
     }
     if(flags.fields){
       if(flags.labels){
@@ -180,12 +190,31 @@ FullformCommand.flags = {
     description: 'Desired form formFields',
     multiple: false,
     required: false         
-  }), 
+  }),
   labels: flags.boolean({
     char: 'l',
     default: true,
-    description: 'Automatically add labels to your form',
-  })
+    description: 'Automatically add labels to your form'
+  }),
+  message: flags.string({
+    char: 'm',                    
+    description: 'the email message body. you can use html and you can use <FormOutput> to include the information from the form submission',
+    multiple: false,
+    required: false         
+  }),
+  subject: flags.string({
+    char: 's',                    
+    description: 'the subject of the email message',
+    multiple: false,
+    required: false         
+  }),    
+  captcha: flags.boolean({
+    char: 'c',                    
+    description: 'Adds recaptcha elements and scripts to the form and lambda function',
+    multiple: false,
+    required: false,
+    default: false  
+  }),
 }
 
 FullformCommand.description = `Generates an html form and saves it in the formNames folder`

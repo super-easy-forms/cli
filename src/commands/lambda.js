@@ -9,7 +9,7 @@ function isEmpty(obj) {
 class LambdaCommand extends Command {
   async run() {
     const {args, flags} = this.parse(LambdaCommand)
-    let options = {email:null, formFields:null, recipients:null};
+    let options = {};
     let params = {};
     if(flags.email){
       options.email = flags.email
@@ -18,7 +18,22 @@ class LambdaCommand extends Command {
       options.recipients = flags.recipients
     }
     if(flags.fields){
-      options.fields = flags.feilds
+      options.fields = flags.fields
+    }
+    if(flags.message){
+      options["emailMessage"] = flags.message
+    }
+    if(flags.subject){
+      options["emailSubject"] = flags.subject
+    }
+    if(flags.captcha){
+      options.captcha = true;
+    }
+    if(flags.zip){
+      options.zip = true;
+    }
+    if(flags.bucket){
+      options["functionBucket"] = true;
     }
     Object.keys(options).map(function(key, index) {
       if(options[key]){
@@ -28,16 +43,30 @@ class LambdaCommand extends Command {
     if(isEmpty(params)){
       options = null;
     }
-    cli.action.start('Generating your lambda function')
-    SEF.CreateLambdaFunction(args.name, options, function(err, data){
-      if(err) {
-        console.error(err)
-        cli.action.stop('Error')
-      }
-      else{
-        cli.action.stop()
-      }
-    })
+    if(args.action === 'create'){
+      cli.action.start('Generating your lambda function deployment package')
+      SEF.CreateLambdaFunction(args.name, options, function(err, data){
+        if(err) {
+          console.error(err)
+          cli.action.stop('Error')
+        }
+        else{
+          cli.action.stop()
+        }
+      })
+    }
+    else if(args.action === 'update'){
+      cli.action.start('Updating your lambda function deployment package')
+      SEF.UpdateLambdaFunction(args.name, function(err, data){
+        if(err) {
+          console.error(err)
+          cli.action.stop('Error')
+        }
+        else{
+          cli.action.stop()
+        }
+      })
+    }
   } 
 }
 
@@ -47,6 +76,13 @@ LambdaCommand.args = [
     required: true,
     description: 'name of the form - must be unique',
   },
+  {
+    name: 'action',
+    required: false,
+    description: 'action to perform to the lambda function - create or update',
+    default: 'create',
+    options: ['create', 'update']
+  }
 ]
 LambdaCommand.flags = {
   email: flags.string({
@@ -67,10 +103,40 @@ LambdaCommand.flags = {
     description: 'Desired form formFields',
     multiple: false,
     required: false         
+  }),
+  message: flags.string({
+    char: 'm',                    
+    description: 'the email message body. you can use html and you can use <FormOutput> to include the information from the form submission',
+    multiple: false,
+    required: false         
+  }),
+  subject: flags.string({
+    char: 's',                    
+    description: 'the subject of the email message',
+    multiple: false,
+    required: false         
+  }),  
+  captcha: flags.boolean({
+    char: 'c',                    
+    description: 'Adds recaptcha elements to the lambda function',
+    multiple: false,
+    required: false,
+  }),
+  zip: flags.boolean({
+    char: 'z',                    
+    description: 'zips the lambda function',
+    multiple: false,
+    default: false  
+  }),
+  bucket: flags.boolean({
+    char: 'b',                    
+    description: 'creates a new s3 bucket and uploads the zipped lambda function',
+    multiple: false,
+    default: false
   })
 }
 
-LambdaCommand.description = `Generates a lambda function and saves it as lambdaFunction.js in the formNames folder`
+LambdaCommand.description = `Creates or updates a lambda function and optionally zips and uploads it into an AWS s3 bucket.`
 
 module.exports = LambdaCommand
 

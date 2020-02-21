@@ -10,7 +10,7 @@ function isEmpty(obj) {
 class FormCommand extends Command {
   async run() {
     const {args, flags} = this.parse(FormCommand)
-    let options = {endpointUrl:null, formFields:null};
+    let options = {};
     let params = {};
     if(flags.url){
       options.endpointUrl = flags.url
@@ -23,6 +23,9 @@ class FormCommand extends Command {
         options.formFields = SEF.ParseFields(flags.fields, false);
       }
     }
+    if(flags.captcha){
+      options.captcha = true;
+    }
     Object.keys(options).map(function(key, index) {
       if(options[key]){
         params[key] = options[key]
@@ -33,6 +36,7 @@ class FormCommand extends Command {
     }
     cli.action.start('Generating your form')
     SEF.CreateForm(args.name, options, function(err, data){
+      //console.log(options)
       if(err) {
         console.error(err)
         cli.action.stop('Error')
@@ -60,14 +64,20 @@ FormCommand.flags = {
   labels: flags.boolean({
     char: 'l',
     default: true,
-    description: 'Automatically add labels to your form',
-    dependsOn: ['fields']
+    description: 'Automatically add labels to your form'
   }),
-    url: flags.string({
+  url: flags.string({
     char: 'u',                    
     description: 'The API endpoint endpointUrl for your form',
     multiple: false,
     required: false         
+  }),
+  captcha: flags.boolean({
+    char: 'c',                    
+    description: 'Adds recaptcha elements and scripts to the form',
+    multiple: false,
+    required: false,
+    default: false  
   }),
 }
 
