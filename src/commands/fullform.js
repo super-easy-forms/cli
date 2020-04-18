@@ -5,6 +5,7 @@ const readline = require('readline').createInterface({
   output: process.stdout
 });
 const open = require('open');
+const fs = require('fs');
 const {cli} = require('cli-ux');
 
 function promptemail(email, callback){
@@ -94,7 +95,8 @@ function backend(cliaction, args, params, options){
 class FullformCommand extends Command {
   async run() {
     const {args, flags} = this.parse(FullformCommand)
-    let options = {};
+    let rawConfig = fs.readFileSync(`./forms/${args.name}/config.json`)
+    let options = JSON.parse(rawConfig);
     let params = {};
     if(flags.email){
       options.email = flags.email;
