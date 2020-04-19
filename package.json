@@ -13,7 +13,7 @@
     "@oclif/plugin-help": "^2.2.2",
     "cli-ux": "^5.3.3",
     "open": "^7.0.0",
-    "super-easy-forms": "2.1.3"
+    "super-easy-forms": "2.1.4"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
